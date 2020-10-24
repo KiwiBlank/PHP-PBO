@@ -63,9 +63,6 @@ class Process {
   function iterateFiles() {
     $explodeOutputName = explode('/', $this->_FINALOUTPUTNAME);
     $directoryFinal = $explodeOutputName[0];
-    //print_r("HAS");
-  //  print_r("$this->_OUTPUTFOLDER" . DIRECTORY_SEPARATOR . "$directoryFinal");
-  //  print_r("HAS");
 
     $folderRII = new RecursiveIteratorIterator(new RecursiveDirectoryIterator("$this->_OUTPUTFOLDER/$directoryFinal"));
 
@@ -105,8 +102,7 @@ class Process {
     $compressOutput = getcwd();
     $compressOutput .= DIRECTORY_SEPARATOR . $this->_OUTPUTFOLDER . DIRECTORY_SEPARATOR . "{$directoryFinal}.COMPRESSOUTPUT";
 
-    // Here comes the magic, see (https://github.com/MichaelDipperstein/lzss) for the program. HAS TO BE ADDED TO THE PATH ENVIROMENT VARIABLE
-    // I would rewrite it in php, but I was not able to.
+    // Here comes the magic, see (https://github.com/MichaelDipperstein/lzss) for the program. Note: Has to be added to enviroment variable.
     exec("lzss -c -i $compressInput -o $compressOutput");
 
     // Now read the new compressed file.
@@ -127,7 +123,7 @@ class Process {
   function packPBO($folderRII, $directoryFinal) {
     $mainStream = \ByteBuffer\Stream::factory('', []);
 
-    $mainStream->writeNull(1); // This might be wrong, as it should be filename according to wiki
+    $mainStream->writeNull(1); // This might be wrong, as it might be filename according to wiki
     $mainStream->write('sreV'); // 0x56657273 (https://community.bistudio.com/wiki/PBO_File_Format#PBO_Header_Entry)
 
     $this->streamHandler($mainStream, $folderRII, false);
